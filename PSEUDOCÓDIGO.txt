@@ -1,0 +1,173 @@
+PSEUDOCÓDIGO
+
+INICIO
+
+    Definir:
+        TotalEvaluados = 0
+        Publicados = 0
+        Rechazados = 0
+        Revisiones = 0
+        ImpactoAlto = 0
+        ImpactoMedio = 0
+        ImpactoBajo = 0
+
+    LLAMAR Menu
+
+FIN
+
+
+PROCEDIMIENTO Menu
+    REPETIR
+        LIMPIAR pantalla
+        MOSTRAR:
+            1. Evaluar contenido
+            2. Mostrar reglas
+            3. Mostrar estadísticas
+            4. Reiniciar estadísticas
+            5. Salir
+
+        LEER opcion
+
+        SEGÚN opcion HACER
+            1: LLAMAR EvaluarContenido
+            2: LLAMAR MostrarReglas
+            3: LLAMAR MostrarEstadisticas
+            4: LLAMAR ReiniciarEstadisticas
+            5: LLAMAR ResumenFinal
+        FIN SEGÚN
+
+        SI opcion ≠ 5 ENTONCES
+            ESPERAR tecla
+        FIN SI
+
+    HASTA QUE opcion = 5
+FIN PROCEDIMIENTO
+
+
+PROCEDIMIENTO EvaluarContenido
+
+    LIMPIAR pantalla
+
+    LEER Tipo (1 a 4)
+    LEER Duracion
+    LEER Clasificacion (1 a 3)
+    LEER Hora (0 a 23)
+    LEER Nivel (1 a 3)
+
+    TotalEvaluados++
+
+    // VALIDACIÓN TÉCNICA
+    Valido ← VERDADERO
+    Motivo ← ""
+
+    SI Tipo = 1 Y (Duracion < 60 O Duracion > 180) ENTONCES
+        Valido ← FALSO
+        Motivo ← Motivo + "Duracion pelicula incorrecta"
+    FIN SI
+
+    SI Tipo = 2 Y (Duracion < 20 O Duracion > 90) ENTONCES
+        Valido ← FALSO
+    FIN SI
+
+    SI Tipo = 3 Y (Duracion < 30 O Duracion > 120) ENTONCES
+        Valido ← FALSO
+    FIN SI
+
+    SI Tipo = 4 Y (Duracion < 30 O Duracion > 240) ENTONCES
+        Valido ← FALSO
+    FIN SI
+
+    // HORARIO
+    SI Clasificacion = 2 Y (Hora < 6 O Hora > 22) ENTONCES
+        Valido ← FALSO
+    FIN SI
+
+    SI Clasificacion = 3 Y (Hora ≥ 5 Y Hora < 22) ENTONCES
+        Valido ← FALSO
+    FIN SI
+
+    // PRODUCCIÓN
+    SI Nivel = 1 Y Clasificacion = 3 ENTONCES
+        Valido ← FALSO
+    FIN SI
+
+    SI Valido = FALSO ENTONCES
+        Rechazados++
+        MOSTRAR "RECHAZADO"
+        MOSTRAR Motivo
+        RETORNAR
+    FIN SI
+
+
+    // CLASIFICACIÓN DE IMPACTO
+    SI Nivel = 3 O Duracion > 120 O (Hora ≥ 20 Y Hora ≤ 23) ENTONCES
+        Impacto ← "Alto"
+        ImpactoAlto++
+    SINO SI Nivel = 2 O (Duracion ≥ 60 Y Duracion ≤ 120) ENTONCES
+        Impacto ← "Medio"
+        ImpactoMedio++
+    SINO
+        Impacto ← "Bajo"
+        ImpactoBajo++
+    FIN SI
+
+
+    // DECISIÓN FINAL
+    SI Impacto = "Alto" ENTONCES
+        Revisiones++
+        MOSTRAR "Enviar a revisión"
+    SINO
+        Publicados++
+        MOSTRAR "Publicar contenido"
+    FIN SI
+
+FIN PROCEDIMIENTO
+
+
+PROCEDIMIENTO MostrarReglas
+    MOSTRAR "Duraciones:"
+    MOSTRAR "Película: 60-180"
+    MOSTRAR "Serie: 20-90"
+    MOSTRAR "Documental: 30-120"
+    MOSTRAR "Evento: 30-240"
+
+    MOSTRAR "Horario:"
+    MOSTRAR "+13: 6-22"
+    MOSTRAR "+18: 22-5"
+
+    MOSTRAR "Producción:"
+    MOSTRAR "Baja: no permite +18"
+FIN PROCEDIMIENTO
+
+
+PROCEDIMIENTO MostrarEstadisticas
+    MOSTRAR TotalEvaluados
+    MOSTRAR Publicados
+    MOSTRAR Rechazados
+    MOSTRAR Revisiones
+
+    SI TotalEvaluados > 0 ENTONCES
+        Porcentaje ← (Publicados / TotalEvaluados) * 100
+        MOSTRAR Porcentaje
+    FIN SI
+FIN PROCEDIMIENTO
+
+
+PROCEDIMIENTO ReiniciarEstadisticas
+    TotalEvaluados ← 0
+    Publicados ← 0
+    Rechazados ← 0
+    Revisiones ← 0
+    ImpactoAlto ← 0
+    ImpactoMedio ← 0
+    ImpactoBajo ← 0
+
+    MOSTRAR "Estadísticas reiniciadas"
+FIN PROCEDIMIENTO
+
+
+PROCEDIMIENTO ResumenFinal
+    MOSTRAR "Resumen final"
+    LLAMAR MostrarEstadisticas
+    MOSTRAR "Fin del programa"
+FIN PROCEDIMIENTO
